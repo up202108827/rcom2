@@ -82,7 +82,6 @@ int readResponse(int socket, char *buf){
     int i = 0;
     int code;
     int count = 0;
-    ResponseState response = START;
     memset(buf, 0, MAX_LENGTH);
     printf("Reading response\n");
     while (count != 3) {
@@ -118,24 +117,24 @@ int readResponse(int socket, char *buf){
                 buf[i++] = helper;
             }
         }
-        sscanf(buf, "%d", &code);
-        printf("Buf: %s\n", buf);
-        return code;
     }
+    sscanf(buf, "%d", &code);
+    printf("Buf: %s\n", buf);
+    return code;
 }
 
 int authenticate(int socket, char *user, char *password){
     char helper[MAX_LENGTH];
-    char password[5+strlen(password)+1];
-    char user[5+strlen(user)+1];
+    char pass[5+strlen(password)+1];
+    char using[5+strlen(user)+1];
     printf("Socket: %d\n", socket);
-    sprintf(password, "pass %s\n", password);
-    sprintf(user, "user %s\n", user);
-    printf("User command: %s\n", user);
-    write(socket, user, strlen(user));
+    sprintf(pass, "pass %s\n", password);
+    sprintf(using, "user %s\n", user);
+    printf("User command: %s\n", using);
+    write(socket, using, strlen(using));
     if(readResponse(socket,helper)!=331) exit(-1); 
     memset(helper, 0, MAX_LENGTH);
-    write(socket, password, strlen(password));
+    write(socket, pass, strlen(pass));
     return readResponse(socket,helper); 
 }
 
